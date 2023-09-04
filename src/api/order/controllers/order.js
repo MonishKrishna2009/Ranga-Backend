@@ -3,7 +3,8 @@ const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 module.exports = createCoreController("api::order.order", ({ strapi }) => ({
   async create(ctx) {
-    const { products } = ctx.request.body;
+    const { products, orderid } = ctx.request.body; // Receive the orderid
+
     try {
       const lineItems = await Promise.all(
         products.map(async (product) => {
@@ -37,7 +38,7 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
 
       await strapi
         .service("api::order.order")
-        .create({ data: { products, stripeId: session.id } });
+        .create({ data: { orderid:orderid, products, stripeId: session.id } }); // Use the received orderid
 
       return { stripeSession: session };
     } catch (error) {

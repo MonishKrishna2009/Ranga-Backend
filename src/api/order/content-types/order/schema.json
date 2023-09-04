@@ -20,7 +20,7 @@
       "type": "json"
     },
     "orderid": {
-      "type": "string"
+      "type": "biginteger"
     }
   }
 }
