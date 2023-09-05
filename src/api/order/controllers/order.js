@@ -3,7 +3,7 @@ const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 module.exports = createCoreController("api::order.order", ({ strapi }) => ({
   async create(ctx) {
-    const { products, orderid } = ctx.request.body; // Receive the orderid
+    const { products, orderid } = ctx.request.body;
 
     try {
       const lineItems = await Promise.all(
@@ -31,19 +31,15 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
         shipping_address_collection: { allowed_countries: ["IN"] },
         payment_method_types: ["card"],
         mode: "payment",
-        success_url: process.env.CLIENT_URL + `/success`,
+        success_url: process.env.CLIENT_URL + `/success?orderid=${orderid}`,
         cancel_url: process.env.CLIENT_URL + "/failed",
         line_items: lineItems,
       });
 
-      await strapi
-        .service("api::order.order")
-        .create({ data: { orderid:orderid, products, stripeId: session.id } }); // Use the received orderid
-
       return { stripeSession: session };
     } catch (error) {
       ctx.response.status = 500;
-      return { error };
+      return { error: "Payment failed" };
     }
   },
 }));
