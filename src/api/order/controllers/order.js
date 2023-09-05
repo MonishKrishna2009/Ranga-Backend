@@ -1,6 +1,8 @@
 const { createCoreController } = require("@strapi/strapi").factories;
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 
+// Import other necessary dependencies
+
 module.exports = createCoreController("api::order.order", ({ strapi }) => ({
   async create(ctx) {
     const { products, orderid } = ctx.request.body;
@@ -8,22 +10,7 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
     try {
       const lineItems = await Promise.all(
         products.map(async (product) => {
-          const item = await strapi
-            .service("api::product.product")
-            .findOne(product.id);
-
-          return {
-            price_data: {
-              currency: "inr",
-              product_data: {
-                name: item.name,
-              },
-              unit_amount: Math.round(
-                (item.size.data.find((size) => size.size === product.selectedSize)?.price || item.price) * 100
-              ),
-            },
-            quantity: product.quantity,
-          };
+          // Existing code...
         })
       );
 
