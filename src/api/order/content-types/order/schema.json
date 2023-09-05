@@ -4,7 +4,7 @@
   "info": {
     "singularName": "order",
     "pluralName": "orders",
-    "displayName": "order",
+    "displayName": "Order",
     "description": ""
   },
   "options": {
@@ -12,15 +12,43 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "stripeId": {
-      "type": "string",
-      "required": false
-    },
     "products": {
-      "type": "json"
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "biginteger",
+      "required": true
     },
     "orderid": {
-      "type": "biginteger"
+      "type": "biginteger",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "address": {
+      "type": "component",
+      "repeatable": false,
+      "component": "address.address"
+    },
+    "usedDiscount": {
+      "type": "boolean",
+      "default": false
+    },
+    "stripeId": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "paid": {
+      "type": "boolean"
     }
   }
 }
